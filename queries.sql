@@ -9,15 +9,29 @@
 -- SELECT * FROM animals WHERE name != 'Gabumon';
 -- SELECT * FROM animals WHERE weight_kg BETWEEN 10.4 AND 17.3;
 
-UPDATE animals SET species = 'unespecified' WHERE species IS NULL;
-SELECT * FROM animals;
-ROLLBACK;
+/* Transactions */
 
-UPDATE animals SET species = 'digimon' WHERE name LIKE '%mon';
-UPDATE animals SET species = 'pokemon' WHERE name NOT LIKE '%mon';
-COMMIT;
-SELECT * FROM animals;
+-- BEGIN;
+-- UPDATE animals SET species = 'unespecified' WHERE species IS NULL;
+-- SELECT * FROM animals;
+-- ROLLBACK;
 
+-- BEGIN;
+-- UPDATE animals SET species = 'digimon' WHERE name LIKE '%mon';
+-- UPDATE animals SET species = 'pokemon' WHERE name NOT LIKE '%mon';
+-- COMMIT;
+-- SELECT * FROM animals;
+
+-- BEGIN;
 -- DELETE FROM animals;
 -- ROLLBACK;
 -- SELECT * FROM animals;
+
+BEGIN;
+DELETE FROM animals WHERE date_of_birth > '2022-01-01';
+SAVEPOINT SP1;
+UPDATE animals SET weight_kg = weight_kg*(-1);
+ROLLBACK TO SP1;
+UPDATE animals SET weight_kg = weight_kg*(-1) WHERE weight_kg < 0;
+COMMIT;
+SELECT * FROM animals;
