@@ -27,5 +27,23 @@ CREATE TABLE species (
   ALTER TABLE animals ADD FOREIGN KEY (species_id) REFERENCES species (id);
   ALTER TABLE animals ADD COLUMN owner_id INT REFERENCES owners (id);
   ALTER TABLE animals ADD FOREIGN KEY (owner_id) REFERENCES owners (id);
-
   ALTER TABLE animals ADD PRIMARY KEY (id);
+
+/* Tables for vets, specializations, and visits. */
+
+CREATE TABLE vets (
+  id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  name VARCHAR(100),
+  age INT,
+  date_of_graduation DATE);
+
+CREATE TABLE specializations (
+  species_id INT REFERENCES species (id) ON UPDATE CASCADE,
+  vet_id INT REFERENCES vets (id) ON UPDATE CASCADE,
+  PRIMARY KEY (species_id, vet_id));
+
+CREATE TABLE visits (
+  animal_id INT REFERENCES animals (id) ON UPDATE CASCADE,
+  vet_id INT REFERENCES vets (id) ON UPDATE CASCADE,
+  date_of_visit DATE,
+  PRIMARY KEY (animal_id, vet_id, date_of_visit));
